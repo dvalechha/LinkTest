@@ -11,9 +11,9 @@ import java.util.List;
 public class PartnerMember {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "PTNR_MEMBR_ID")
-    private Long id;
+    private Integer id;
 
     @Column(name = "PTNR_LYLTY_ID")
     private String partnerLoyaltyId;

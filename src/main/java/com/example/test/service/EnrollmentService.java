@@ -4,6 +4,7 @@ import com.example.test.model.AccountPartnerMap;
 import com.example.test.model.ClientAccount;
 import com.example.test.model.PartnerMaster;
 import com.example.test.model.PartnerMember;
+import com.example.test.model.controller.MemberEnrollmentRequest;
 import com.example.test.repository.PartnerMasterRepository;
 import com.example.test.repository.PartnerMemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +26,15 @@ public class EnrollmentService {
 
 
     @Transactional
-    public void enrollMember(String partnerLoyaltyId, String partnerCode) {
+    public void enrollMember(String partnerLoyaltyId, String partnerCode, String clientCard) {
         // Task 1: Fetch ID from PTNR_MSTR table for partnerCode = 'GOOGLE'
+
+    }
+
+    public void enrollMember(MemberEnrollmentRequest memberEnrollmentRequest) {
+        String partnerCode = memberEnrollmentRequest.getPartnerCode();
+        String partnerLoyaltyId = memberEnrollmentRequest.getPartnerLoyaltyId();
+
         PartnerMaster partnerMaster = partnerMasterRepository.findByPartnerCode(partnerCode);
 
         if (partnerMaster != null) {
@@ -35,17 +43,11 @@ public class EnrollmentService {
             partnerMember.setPartnerLoyaltyId(partnerLoyaltyId);
             partnerMember.setPartnerMaster(partnerMaster);
 
-            // Create AccountPartnerMap with clientAccount set to null
-            AccountPartnerMap accountPartnerMap = new AccountPartnerMap();
-            accountPartnerMap.setPartnerMember(partnerMember);
-            accountPartnerMap.setClientAccount(null);
-
-            partnerMember.setAccountPartnerMapList(addPartnerMemberToList(accountPartnerMap));
-            partnerMember = partnerMemberRepository.save(partnerMember);
+            partnerMemberRepository.save(partnerMember);
 
         } else {
             // Handle if partnerCode 'GOOGLE' not found
-            throw new RuntimeException("Partner with code - " + partnerCode + "not found");
+            throw new RuntimeException("Partner with code - " + partnerCode + " not found");
         }
     }
 
