@@ -9,13 +9,9 @@ import java.util.List;
 public class ClientProfile {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "CLNT_PRFL_ID")
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "CLNT_TYP_MASTR_ID")
-    private ClientTypeMaster clientTypeMaster;
 
     @OneToMany
     private List<ClientAccount> clientAccountList;
@@ -28,6 +24,13 @@ public class ClientProfile {
 
     @Column(name = "LID_HASH")
     private String lidHash;
+
+    @OneToMany(mappedBy = "clientProfile", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ClientAccount> clientAccounts;
+
+    @OneToOne
+    @JoinColumn(name = "CLNT_TYP_MASTR_ID", referencedColumnName = "CLNT_TYP_MASTR_ID")
+    private ClientTypeMaster clientTypeMaster;
 
     // Getters and setters
 }

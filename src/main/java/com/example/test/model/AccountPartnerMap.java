@@ -9,16 +9,16 @@ import lombok.Data;
 public class AccountPartnerMap {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ACCNT_PTNR_MAP_ID")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "CLNT_ACCNT_ID")
+    @JoinColumn(name = "CLNT_ACCNT_ID", nullable = false)
     private ClientAccount clientAccount;
 
     @ManyToOne
-    @JoinColumn(name = "PTNR_MEMBR_ID")
+    @JoinColumn(name = "PTNR_MEMBR_ID", nullable = false)
     private PartnerMember partnerMember;
 
     // Getters and setters

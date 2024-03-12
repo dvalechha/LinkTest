@@ -8,7 +8,7 @@ import lombok.Data;
 public class TokenMaster {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "TKN_MASTER_ID")
     private Long id;
 
@@ -20,6 +20,9 @@ public class TokenMaster {
 
     @Column(name = "TKN_REQUESTOR_NUM")
     private Integer requestorNumber;
+
+    @OneToOne(mappedBy = "tokenMaster")
+    private AccountToken accountToken;
 
     // Getters and setters
 }

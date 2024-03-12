@@ -8,10 +8,13 @@ import lombok.Data;
 @Data
 public class ClientTypeMaster {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "CLNT_TYP_MASTR_ID")
     private Long id;
 
     @Column(name = "CLNT_TYP_CD")
     private String clientTypeCode;
+
+    @OneToOne(mappedBy = "clientTypeMaster")
+    private ClientProfile clientProfile;
 }

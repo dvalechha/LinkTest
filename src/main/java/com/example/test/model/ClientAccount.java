@@ -11,19 +11,9 @@ import java.util.List;
 public class ClientAccount {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "CLNT_ACCNT_ID")
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "CLNT_PRFL_ID")
-    private ClientProfile clientProfile;
-
-    @OneToMany
-    private List<AccountToken> accountTokenList;
-
-    @OneToMany
-    private List<AccountPartnerMap> accountPartnerMapList;
 
     @Column(name = "PAYMENT_CRD_NUM")
     private String paymentCardNumber;
@@ -35,8 +25,18 @@ public class ClientAccount {
     private String clientAccountType;
 
     @ManyToOne
-    @JoinColumn(name = "PRD_MASTR_ID")
+    @JoinColumn(name = "CLNT_PRFL_ID", nullable = false)
+    private ClientProfile clientProfile;
+
+    @OneToOne
+    @JoinColumn(name = "PRD_MASTR_ID", referencedColumnName = "PRD_MASTR_ID")
     private ProductMaster productMaster;
+
+    @OneToMany(mappedBy = "clientAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AccountPartnerMap> accountPartnerMaps;
+
+    @OneToMany(mappedBy = "clientAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AccountToken> accountTokens;
 
     // Getters and setters
 }

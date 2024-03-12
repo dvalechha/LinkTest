@@ -1,14 +1,11 @@
 package com.example.test.model.controller;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class MemberEnrollmentRequest {
+public class MemberRequest {
 
     String partnerLoyaltyId;
-
-    String clientCard;
 
     String partnerCode;
 }

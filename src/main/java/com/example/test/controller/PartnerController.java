@@ -1,6 +1,7 @@
-package com.example.test;
+package com.example.test.controller;
 
-import com.example.test.model.controller.MemberEnrollmentRequest;
+import com.example.test.model.controller.MemberRequest;
+import com.example.test.model.error.ErrorResponse;
 import com.example.test.service.EnrollmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,23 +14,35 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/v1")
-public class LinkController {
+public class PartnerController {
 
     @Autowired
     private EnrollmentService enrollmentService;
 
     @PostMapping("/member/enroll")
-    public ResponseEntity<String> enrollMember(
-                                @RequestBody MemberEnrollmentRequest memberEnrollmentRequest,
+    public ResponseEntity<?> enrollMember(
+                                @RequestBody MemberRequest memberRequest,
                                 @RequestHeader(value = "requestId", required = true) String requestId) {
-        enrollmentService.enrollMember(memberEnrollmentRequest);
-
-        return new ResponseEntity<>("Enrollment successful", HttpStatus.OK);
+        try {
+            enrollmentService.enrollMember(memberRequest);
+            return ResponseEntity.ok("Enrollment Complete !!");
+        } catch (Exception e) {
+            //In actual implementation, different types of error should map to different codes
+            ErrorResponse errorResponse = new ErrorResponse("LL-SVC-100",  e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
     }
 
     @PostMapping("/member/unenroll")
-    public ResponseEntity<String> unenrollMember() {
-        return new ResponseEntity<>("Un-enroll member successful", HttpStatus.OK);
+    public ResponseEntity<?> unenrollMember(@RequestHeader(value = "requestId", required = true) String requestId,
+                                                 @RequestBody MemberRequest memberRequest) {
+        try {
+            enrollmentService.unenrollMember(memberRequest);
+            return ResponseEntity.ok("Un-enrollment Complete");
+        } catch (Exception e) {
+            ErrorResponse errorResponse = new ErrorResponse("LL-SVC-101",  e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
     }
 
     @PostMapping("/member/link")

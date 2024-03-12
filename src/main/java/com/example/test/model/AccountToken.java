@@ -10,13 +10,9 @@ import java.sql.Timestamp;
 public class AccountToken {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ACCNT_TKN_ID")
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "TKN_MASTER_ID")
-    private TokenMaster tokenMaster;
 
     @Column(name = "TKN_NO")
     private String tokenNumber;
@@ -31,8 +27,12 @@ public class AccountToken {
     private Timestamp lastUpdatedDate;
 
     @ManyToOne
-    @JoinColumn(name = "CLNT_ACCNT_ID")
+    @JoinColumn(name = "CLIENT_ACCOUNT_ID", nullable = false)
     private ClientAccount clientAccount;
+
+    @OneToOne
+    @JoinColumn(name = "TKN_MASTER_ID", referencedColumnName = "TKN_MASTER_ID")
+    private TokenMaster tokenMaster;
 
     // Getters and setters
 }
