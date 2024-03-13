@@ -1,8 +1,10 @@
 package com.example.test.controller;
 
-import com.example.test.model.controller.MemberRequest;
+import com.example.test.model.controller.MemberLinkRequest;
+import com.example.test.model.controller.MemberEnrollRequest;
 import com.example.test.model.error.ErrorResponse;
 import com.example.test.service.EnrollmentService;
+import com.example.test.service.MemberLinkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +21,15 @@ public class PartnerController {
     @Autowired
     private EnrollmentService enrollmentService;
 
+    @Autowired
+    private MemberLinkService memberLinkService;
+
     @PostMapping("/member/enroll")
     public ResponseEntity<?> enrollMember(
-                                @RequestBody MemberRequest memberRequest,
+                                @RequestBody MemberEnrollRequest memberEnrollRequest,
                                 @RequestHeader(value = "requestId", required = true) String requestId) {
         try {
-            enrollmentService.enrollMember(memberRequest);
+            enrollmentService.enrollMember(memberEnrollRequest);
             return ResponseEntity.ok("Enrollment Complete !!");
         } catch (Exception e) {
             //In actual implementation, different types of error should map to different codes
@@ -35,9 +40,9 @@ public class PartnerController {
 
     @PostMapping("/member/unenroll")
     public ResponseEntity<?> unenrollMember(@RequestHeader(value = "requestId", required = true) String requestId,
-                                                 @RequestBody MemberRequest memberRequest) {
+                                                 @RequestBody MemberEnrollRequest memberEnrollRequest) {
         try {
-            enrollmentService.unenrollMember(memberRequest);
+            enrollmentService.unenrollMember(memberEnrollRequest);
             return ResponseEntity.ok("Un-enrollment Complete");
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse("LL-SVC-101",  e.getMessage());
@@ -46,10 +51,14 @@ public class PartnerController {
     }
 
     @PostMapping("/member/link")
-    public ResponseEntity<String> link() {
-        //TBD: POST body should accept, List of payment cards and partnerLoyaltyId.
-        //Based on that, make INSERTs into CNT_PRFL, CLIENT_ACCNT and ACCNT_PART_MAP
-        return new ResponseEntity<>("Link successful", HttpStatus.OK);
+    public ResponseEntity<?> link(@RequestBody MemberLinkRequest linkRequest) {
+        try {
+            memberLinkService.link(linkRequest);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Linked successfully");
+        } catch (Exception e) {
+            ErrorResponse errorResponse = new ErrorResponse("LL-SVC-102",  e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
     }
 
     @PostMapping("/member/unlink")

@@ -3,9 +3,11 @@ package com.example.test.model.controller;
 import lombok.Data;
 
 @Data
-public class MemberRequest {
+public class MemberUnLinkRequest {
 
-    String partnerLoyaltyId;
+    String clientCard;
 
     String partnerCode;
+
+    String partnerLoyaltyId;
 }

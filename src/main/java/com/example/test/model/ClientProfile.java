@@ -1,11 +1,13 @@
 package com.example.test.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.List;
 
 @Entity
 @Table(name = "CLNT_PRFL")
+@Data
 public class ClientProfile {
 
     @Id

@@ -13,8 +13,8 @@ public class AccountPartnerMap {
     @Column(name = "ACCNT_PTNR_MAP_ID")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "CLNT_ACCNT_ID", nullable = false)
+    @OneToOne
+    @JoinColumn(name = "CLNT_ACCNT_ID")
     private ClientAccount clientAccount;
 
     @ManyToOne

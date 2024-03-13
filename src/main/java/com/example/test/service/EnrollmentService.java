@@ -3,7 +3,8 @@ package com.example.test.service;
 import com.example.test.model.AccountPartnerMap;
 import com.example.test.model.PartnerMaster;
 import com.example.test.model.PartnerMember;
-import com.example.test.model.controller.MemberRequest;
+import com.example.test.model.controller.MemberEnrollRequest;
+import com.example.test.repository.AccountPartnerMapRepository;
 import com.example.test.repository.PartnerMasterRepository;
 import com.example.test.repository.PartnerMemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ public class EnrollmentService {
     @Autowired
     private PartnerMemberRepository partnerMemberRepository;
 
+    @Autowired
+    private AccountPartnerMapRepository accountPartnerMapRepository;
 
     @Transactional
     public void enrollMember(String partnerLoyaltyId, String partnerCode, String clientCard) {
@@ -29,9 +32,10 @@ public class EnrollmentService {
 
     }
 
-    public void enrollMember(MemberRequest memberRequest) {
-        String partnerCode = memberRequest.getPartnerCode();
-        String partnerLoyaltyId = memberRequest.getPartnerLoyaltyId();
+    @Transactional
+    public void enrollMember(MemberEnrollRequest memberEnrollRequest) {
+        String partnerCode = memberEnrollRequest.getPartnerCode();
+        String partnerLoyaltyId = memberEnrollRequest.getPartnerLoyaltyId();
 
         PartnerMaster partnerMaster = partnerMasterRepository.findByPartnerCode(partnerCode);
 
@@ -43,6 +47,13 @@ public class EnrollmentService {
 
             try {
                 partnerMemberRepository.save(partnerMember);
+
+                //Save an entry into the ACCNT_PTNR_MAP table
+                /*AccountPartnerMap accountPartnerMap = new AccountPartnerMap();
+                accountPartnerMap.setClientAccount(null);
+                accountPartnerMap.setPartnerMember(partnerMember);
+
+                accountPartnerMapRepository.save(accountPartnerMap);*/
             } catch (Exception e) {
                 throw e;
             }
@@ -60,12 +71,12 @@ public class EnrollmentService {
     }
 
     @Transactional
-    public void unenrollMember(MemberRequest memberRequest) {
+    public void unenrollMember(MemberEnrollRequest memberEnrollRequest) {
         // Retrieve PartnerMaster entity based on partnerCode
-        PartnerMaster partnerMaster = partnerMasterRepository.findByPartnerCode(memberRequest.getPartnerCode());
+        PartnerMaster partnerMaster = partnerMasterRepository.findByPartnerCode(memberEnrollRequest.getPartnerCode());
         if (partnerMaster != null) {
             // Retrieve PartnerMember entity based on partnerLoyaltyId and PTNR_MSTR_ID
-            PartnerMember partnerMember = partnerMemberRepository.findByPartnerLoyaltyIdAndPartnerMaster(memberRequest.getPartnerLoyaltyId(), partnerMaster);
+            PartnerMember partnerMember = partnerMemberRepository.findByPartnerLoyaltyIdAndPartnerMaster(memberEnrollRequest.getPartnerLoyaltyId(), partnerMaster);
             if (partnerMember != null) {
                 // Remove the retrieved PartnerMember entity
                 partnerMemberRepository.delete(partnerMember);
