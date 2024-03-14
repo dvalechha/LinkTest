@@ -3,12 +3,15 @@ package com.example.test.model;
 import lombok.Data;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 @Entity
 @Table(name = "PRD_MASTR")
-@Data
+@Getter
+@Setter
 public class ProductMaster {
 
     @Id

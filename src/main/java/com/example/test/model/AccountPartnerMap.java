@@ -1,11 +1,14 @@
 package com.example.test.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Table(name = "ACCNT_PTNR_MAP")
-@Data
+@Table(name = "ACCNT_PTNR_MAP",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"CLNT_ACCNT_ID", "PTNR_MEMBR_ID"})})
+@Getter
+@Setter
 public class AccountPartnerMap {
 
     @Id
@@ -13,14 +16,12 @@ public class AccountPartnerMap {
     @Column(name = "ACCNT_PTNR_MAP_ID")
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "CLNT_ACCNT_ID")
     private ClientAccount clientAccount;
 
     @ManyToOne
-    @JoinColumn(name = "PTNR_MEMBR_ID", nullable = false)
+    @JoinColumn(name = "PTNR_MEMBR_ID")
     private PartnerMember partnerMember;
-
-    // Getters and setters
 }
 

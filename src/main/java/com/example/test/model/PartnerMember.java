@@ -2,6 +2,8 @@ package com.example.test.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -9,7 +11,8 @@ import java.util.List;
 @Table(name = "PTNR_MEMBR",
         uniqueConstraints=
         @UniqueConstraint(columnNames={"PTNR_LYLTY_ID", "PTNR_MSTR_ID"}))
-@Data
+@Getter
+@Setter
 public class PartnerMember {
 
     @Id

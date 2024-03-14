@@ -28,59 +28,37 @@ public class MemberLinkService {
     private PartnerMasterRepository partnerMasterRepository;
 
     @Transactional
-    public void link(MemberLinkRequest linkRequest) {
+    public void link(MemberLinkRequest linkRequest) throws Exception {
+        // Insert data into CLNT_PRFL table
+        ClientProfile clientProfile = new ClientProfile();
+        clientProfile.setClientCardNumber(linkRequest.getClientCard());
+        // Set other properties if needed
+        clientProfileRepository.save(clientProfile);
 
-        PartnerMember partnerMember = null;
-
-        // Retrieve or create ClientProfile entity
-        ClientProfile clientProfile = clientProfileRepository.findByClientCardNumber(linkRequest.getClientCard());
-
-        if (clientProfile == null) {
-            // Create new ClientProfile if not found
-            clientProfile = new ClientProfile();
-            clientProfile.setClientCardNumber(linkRequest.getClientCard());
-            clientProfileRepository.save(clientProfile);
-        }
-
-        // Create ClientAccount entities
-        List<ClientAccount> clientAccountList = linkRequest.getClientAccountList();
-        for (ClientAccount clientAccount : clientAccountList) {
-
-            try{
-                AccountPartnerMap accountPartnerMap = new AccountPartnerMap();
-                accountPartnerMap.setClientAccount(clientAccount);
-                accountPartnerMap.setPartnerMember(
-                        getPartnerMember(linkRequest.getPartnerCode(), linkRequest.getPartnerLoyaltyId()));
-                accountPartnerMapRepository.save(accountPartnerMap);
-
+        // Insert data into CLNT_ACCNT table, avoiding duplicates
+        for (ClientAccount clientAccount : linkRequest.getClientAccountList()) {
+            ClientAccount existingClientAccount = clientAccountRepository.findByPaymentCardNumber(clientAccount.getPaymentCardNumber());
+            if (existingClientAccount == null) {
+                existingClientAccount = clientAccount;
                 clientAccount.setClientProfile(clientProfile);
-                clientAccountRepository.save(clientAccount);
-            } catch (Exception e) {
-                throw e;
+                clientAccountRepository.save(existingClientAccount);
+            }
+
+            PartnerMember partnerMember = getPartnerMember(linkRequest.getPartnerCode(), linkRequest.getPartnerLoyaltyId());
+            AccountPartnerMap accountPartnerMap = null;
+
+            if(partnerMember != null) {
+                accountPartnerMap = accountPartnerMapRepository.findByPartnerMemberAndClientAccount(partnerMember, existingClientAccount);
+            }
+            if(accountPartnerMap == null) {
+                AccountPartnerMap newAccountPartnerMap = new AccountPartnerMap();
+                newAccountPartnerMap.setClientAccount(existingClientAccount);
+                newAccountPartnerMap.setPartnerMember(partnerMember);
+                accountPartnerMapRepository.save(newAccountPartnerMap);
+            } else {
+                throw new Exception("Link already exists");
             }
         }
-    }
-
-    public void unlink(MemberUnLinkRequest unlinkRequest) {
-        // Find the ClientAccount based on client card number
-        /*ClientAccount clientAccount = clientAccountRepository.findByPaymentCardNumber(unlinkRequest.getClientCard());
-
-        if (clientAccount != null) {
-            // Delete the AccountPartnerMap associated with the ClientAccount
-            if (clientAccount.getAccountPartnerMaps() != null) {
-                accountPartnerMapRepository.delete(clientAccount.getAccountPartnerMaps());
-            }
-
-            // Delete the ClientAccount
-            clientAccountRepository.delete(clientAccount);
-
-            // Find the ClientProfile associated with the ClientAccount
-            ClientProfile clientProfile = clientProfileRepository.findByClientCardNumber(unlinkRequest.getClientCard());
-            if (clientProfile != null) {
-                // Delete the ClientProfile
-                clientProfileRepository.delete(clientProfile);
-            }
-        }*/
     }
 
     // Method to retrieve PartnerMember (Replace with your implementation)

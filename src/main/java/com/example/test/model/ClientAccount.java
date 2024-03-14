@@ -2,12 +2,15 @@ package com.example.test.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 @Entity
 @Table(name = "CLNT_ACCNT")
-@Data
+@Getter
+@Setter
 public class ClientAccount {
 
     @Id
@@ -32,8 +35,8 @@ public class ClientAccount {
     @JoinColumn(name = "PRD_MASTR_ID", referencedColumnName = "PRD_MASTR_ID")
     private ProductMaster productMaster;
 
-    @OneToOne(mappedBy = "clientAccount", cascade = CascadeType.ALL, orphanRemoval = true)
-    private AccountPartnerMap accountPartnerMaps;
+    @OneToMany(mappedBy = "clientAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AccountPartnerMap> accountPartnerMaps;
 
     @OneToMany(mappedBy = "clientAccount", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AccountToken> accountTokens;

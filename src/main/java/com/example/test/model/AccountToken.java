@@ -2,11 +2,15 @@ package com.example.test.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.sql.Timestamp;
 
 @Entity
 @Table(name = "ACCNT_TKN")
-@Data
+@Getter
+@Setter
 public class AccountToken {
 
     @Id

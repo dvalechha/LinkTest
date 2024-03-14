@@ -2,12 +2,15 @@ package com.example.test.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 @Entity
 @Table(name = "PTNR_MSTR")
-@Data
+@Getter
+@Setter
 public class PartnerMaster {
 
     @Id

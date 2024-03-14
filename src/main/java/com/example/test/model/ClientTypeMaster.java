@@ -2,10 +2,13 @@ package com.example.test.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "CLNT_TYP_MASTR")
-@Data
+@Getter
+@Setter
 public class ClientTypeMaster {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
