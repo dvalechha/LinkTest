@@ -31,9 +31,13 @@ public class ClientAccount {
     @JoinColumn(name = "CLNT_PRFL_ID", nullable = false)
     private ClientProfile clientProfile;
 
+//    @OneToOne
+//    @JoinColumn(name = "PRD_MASTR_ID", referencedColumnName = "PRD_MASTR_ID")
+//    private ProductMaster productMaster;
+
     @OneToOne
     @JoinColumn(name = "PRD_MASTR_ID", referencedColumnName = "PRD_MASTR_ID")
-    private ProductMaster productMaster;
+    private PartnerProductMap partnerProductMap;
 
     @OneToMany(mappedBy = "clientAccount", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AccountPartnerMap> accountPartnerMaps;

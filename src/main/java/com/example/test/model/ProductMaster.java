@@ -22,8 +22,6 @@ public class ProductMaster {
     @Column(name = "PRD_CD")
     private String productCode;
 
-    @OneToOne(mappedBy = "productMaster")
-    private ClientAccount clientAccount;
-
-    // Getters and setters
+    @OneToMany(mappedBy = "productMaster")
+    private List<PartnerProductMap> partnerProductMaps;
 }

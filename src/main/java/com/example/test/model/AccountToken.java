@@ -18,25 +18,21 @@ public class AccountToken {
     @Column(name = "ACCNT_TKN_ID")
     private Long id;
 
+    @Column(name = "TKN_MASTER_ID")
+    private int tokenMasterId;
+
     @Column(name = "TKN_NO")
-    private String tokenNumber;
+    private String tokenNo;
 
     @Column(name = "HASH_TKN_NO")
-    private String hashedTokenNumber;
-
-    @Column(name = "LAST_UPD_BY", columnDefinition = "VARCHAR(255) DEFAULT 'service'")
-    private String lastUpdatedBy;
-
-    @Column(name = "LAST_UPD_DT", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Timestamp lastUpdatedDate;
+    private String hashTokenNo;
 
     @ManyToOne
-    @JoinColumn(name = "CLIENT_ACCOUNT_ID", nullable = false)
+    @JoinColumn(name = "CLNT_ACCNT_ID", referencedColumnName = "CLNT_ACCNT_ID")
     private ClientAccount clientAccount;
 
-    @OneToOne
-    @JoinColumn(name = "TKN_MASTER_ID", referencedColumnName = "TKN_MASTER_ID")
-    private TokenMaster tokenMaster;
+    @OneToOne(mappedBy = "accountToken")
+    private PartnerTokenMap partnerTokenMap;
 
     // Getters and setters
 }

@@ -3,6 +3,8 @@ package com.example.test.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Entity
 @Table(name = "TKN_MASTER")
 public class TokenMaster {
@@ -19,10 +21,10 @@ public class TokenMaster {
     private String tokenType;
 
     @Column(name = "TKN_REQUESTOR_NUM")
-    private Integer requestorNumber;
+    private String tokenRequestorNum;
 
-    @OneToOne(mappedBy = "tokenMaster")
-    private AccountToken accountToken;
+    @OneToMany
+    private List<PartnerTokenMap> partnerTokenMaps;
 
     // Getters and setters
 }

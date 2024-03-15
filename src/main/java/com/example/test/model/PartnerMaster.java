@@ -24,8 +24,13 @@ public class PartnerMaster {
     @Column(name = "PTNR_NAME")
     private String partnerName;
 
-    @OneToMany(mappedBy = "partnerMaster", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PartnerMember> partnerMembers;
+    @OneToMany(mappedBy = "partnerMaster")
+    private List<PartnerProductMap> partnerProductMaps;
 
+    @OneToMany(mappedBy = "partnerMaster")
+    private List<PartnerTokenMap> partnerTokenMaps;
+
+    @OneToMany(mappedBy = "partnerMaster")
+    private List<PartnerMember> partnerMembers;
     // Getters and setters
 }
